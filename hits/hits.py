@@ -13,6 +13,7 @@ class hits_algorithm(obj):
         hub_norm = calc_norm(self.hub_scores)
         auth_norm = calc_norm(self.auth_scores)
 
+        print('grad = {}'.format(hub_norm - self.hub_norm_prev))
         if iter_num != 0:
             if self.early_stop and hub_norm - self.hub_norm_prev < tol:
                 self.fin_flag = True
@@ -32,10 +33,12 @@ class hits_algorithm(obj):
         self.hub_norm_prev = 0
         self.auth_norm_prev = 0
         for i in range(self.iter):
+            print('iter={}'.format(i))
             if ! fin_flag:
                 self.update_auths_and_hubs(i)
             else:
                 break
+        print('finish training')
         return self.hub_scores, self.auth_scores
 
     def init_scores(self, link_list):
