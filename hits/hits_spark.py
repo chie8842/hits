@@ -69,19 +69,21 @@ class hits_algorithm(obj):
         return scores, indexed
 
 
-def main(spark):
-    data = spark.read.load(data_path)
-    hits = hits(spark, iter=10)
-    hits.train(data)
-
-
-if __name__ == "__main__":
-
+@click.command()
+@click.option('--train_path', help='file prefix')
+def main(train_path):
+    
     # Initialization of SparkSession
     spark = SparkSession.builder \
         .appName('hits_algorithm') \
         .config('spark.debug.maxToStringFields', 1000) \
         .config('spark.sql.shuffle.partitions', 10).getOrCreate()
 
-   data_path = 's3://research-data.ap-northeast-1/datas/skills/recipe_ingredieents'
-   main(spark, data_path)
+    data = spark.read.load(train_path)
+    hits = hits(spark, iter=10)
+    hits.train(data)
+
+
+if __name__ == "__main__":
+
+   main()
